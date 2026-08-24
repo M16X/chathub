@@ -1,1 +1,1 @@
-export const DEFAULT_MODEL_ID = "stepfun/step-3.7-flash:free";
+export const DEFAULT_MODEL_ID = "nvidia/nemotron-3.5-lightning:free";
