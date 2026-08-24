@@ -32,6 +32,9 @@ importers:
       ai:
         specifier: ^7.0.66
         version: 7.0.77(zod@4.4.3)
+      assistant-stream:
+        specifier: 0.3.39
+        version: 0.3.39
       chromadb:
         specifier: ^3.5.0
         version: 3.5.0
