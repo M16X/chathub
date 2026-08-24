@@ -26,6 +26,7 @@ import {
 import { type FC } from "react";
 import { useAttachmentSrc } from "./use-attachment-src";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
+import { ContextDisplay } from "@/components/assistant-ui/context-display";
 import {
   Reasoning,
   ReasoningContent,
@@ -36,6 +37,7 @@ import {
 import { CloneThreadShell } from "./clone-thread-shell";
 import { GrokIcon } from "@/components/icons/grok";
 import { McpConfigDialog } from "@/components/mcp/mcp-config-dialog";
+import { DEFAULT_MODEL_CONTEXT_WINDOW } from "@/lib/model";
 
 export const Grok: FC = () => {
   return (
@@ -58,6 +60,7 @@ export const Grok: FC = () => {
             </ThreadPrimitive.Messages>
           </ThreadPrimitive.Viewport>
           <Composer />
+          <ThreadFooter />
         </AuiIf>
       </ThreadPrimitive.Root>
     </CloneThreadShell>
@@ -114,6 +117,14 @@ const Composer: FC = () => {
         </div>
       </div>
     </ComposerPrimitive.Root>
+  );
+};
+
+const ThreadFooter: FC = () => {
+  return (
+    <div className="mx-auto flex w-full max-w-3xl items-center justify-end px-1 pb-2">
+      <ContextDisplay.Ring modelContextWindow={DEFAULT_MODEL_CONTEXT_WINDOW} />
+    </div>
   );
 };
 
