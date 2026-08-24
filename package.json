@@ -15,6 +15,7 @@
     "@assistant-ui/react": "^0.15.16",
     "@assistant-ui/react-lexical": "^0.2.10",
     "@assistant-ui/react-markdown": "^0.14.12",
+    "@assistant-ui/react-mcp": "^0.1.14",
     "@base-ui/react": "^1.7.0",
     "ai": "^7.0.66",
     "assistant-stream": "0.3.39",

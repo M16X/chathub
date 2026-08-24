@@ -35,11 +35,16 @@ import {
 } from "@/components/assistant-ui/reasoning";
 import { CloneThreadShell } from "./clone-thread-shell";
 import { GrokIcon } from "@/components/icons/grok";
+import { McpConfigDialog } from "@/components/mcp/mcp-config-dialog";
 
 export const Grok: FC = () => {
   return (
     <CloneThreadShell>
-      <ThreadPrimitive.Root className="flex h-full flex-col items-stretch bg-[#fdfdfd] px-4 dark:bg-[#141414]">
+      <ThreadPrimitive.Root className="relative flex h-full flex-col items-stretch bg-[#fdfdfd] px-4 dark:bg-[#141414]">
+        <div className="absolute top-3 right-3 z-10">
+          <McpConfigDialog />
+        </div>
+
         <AuiIf condition={(s) => s.thread.isEmpty}>
           <div className="flex h-full flex-col items-center justify-center">
             <Composer />
