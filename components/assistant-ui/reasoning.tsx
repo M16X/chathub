@@ -244,9 +244,7 @@ function ReasoningContent({
       )}
       {...props}
     >
-      <ReasoningFade side="top" />
       {children}
-      {isPreview ? <ReasoningFade /> : null}
     </CollapsibleContent>
   );
 }

@@ -26,6 +26,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openaiCompatible(DEFAULT_MODEL_ID),
+    instructions: 'You an helpful learning assistant. Render math expressions inside $ and $$ for inline and block expressions.',
     messages: await convertToModelMessages(messages as any),
   });
 
