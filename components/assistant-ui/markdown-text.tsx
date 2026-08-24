@@ -17,6 +17,7 @@ import { type FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 
 import { SyntaxHighlighter } from "@/components/assistant-ui/shiki-highlighter";
+import { MermaidDiagram } from "@/components/assistant-ui/mermaid-diagram";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,11 @@ const MarkdownTextImpl = () => {
       rehypePlugins={[rehypeKatex]}
       className="aui-md"
       components={defaultComponents}
+      componentsByLanguage={{
+        mermaid: {
+          SyntaxHighlighter: MermaidDiagram,
+        },
+      }}
       defer
     />
   );
