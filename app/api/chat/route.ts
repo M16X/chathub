@@ -4,7 +4,9 @@ import {
 } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { DEFAULT_MODEL_ID } from "@/lib/model";
-import { openCodeProviderConfig } from "@/lib/provider";
+import {
+  openCodeProviderConfig,
+} from "@/lib/provider";
 
 export const maxDuration = 30;
 
