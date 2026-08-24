@@ -16,15 +16,6 @@ export async function POST(req: Request) {
     return new Response("Missing messages in request body", { status: 400 });
   }
 
-  const modelFromConfig = body.config?.modelName as string | undefined;
-  const modelFromBody =
-    (body.model as string | undefined) ??
-    (body.modelName as string | undefined) ??
-    (body.modelId as string | undefined);
-
-  const modelId =
-    modelFromConfig ?? modelFromBody ?? DEFAULT_MODEL_ID ?? "hy3-free";
-
   const openaiCompatible = createOpenAICompatible({
     name: openCodeProviderConfig.name,
     baseURL: openCodeProviderConfig.baseURL,
@@ -32,7 +23,7 @@ export async function POST(req: Request) {
   });
 
   const result = streamText({
-    model: openaiCompatible(modelId),
+    model: openaiCompatible(DEFAULT_MODEL_ID),
     messages: await convertToModelMessages(messages as any),
   });
 

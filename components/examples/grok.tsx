@@ -13,8 +13,6 @@ import {
 } from "@assistant-ui/react";
 import {
   ArrowUpIcon,
-  CheckIcon,
-  ChevronDownIcon,
   CopyIcon,
   Mic,
   Paperclip,
@@ -24,11 +22,8 @@ import {
   ThumbsDown,
   ThumbsUp,
   XIcon,
-  Zap,
 } from "lucide-react";
-import { useEffect, type FC } from "react";
-import { useAui } from "@assistant-ui/react";
-import { FALLBACK_MODELS, useModelStore } from "@/lib/model";
+import { type FC } from "react";
 import { useAttachmentSrc } from "./use-attachment-src";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import {
@@ -40,13 +35,6 @@ import {
 } from "@/components/assistant-ui/reasoning";
 import { CloneThreadShell } from "./clone-thread-shell";
 import { GrokIcon } from "@/components/icons/grok";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const Grok: FC = () => {
   return (
@@ -101,8 +89,6 @@ const Composer: FC = () => {
             className="my-2 h-6 max-h-100 min-w-0 flex-1 resize-none bg-transparent text-base leading-6 text-[#0d0d0d] outline-none placeholder:text-[#9a9a9a] dark:text-white dark:placeholder:text-[#6b6b6b]"
           />
 
-          <GrokModelPicker />
-
           <div className="relative mb-0.5 h-9 w-9 shrink-0 rounded-full bg-[#0d0d0d] text-white dark:bg-white dark:text-[#0d0d0d]">
             <button
               type="button"
@@ -123,72 +109,6 @@ const Composer: FC = () => {
         </div>
       </div>
     </ComposerPrimitive.Root>
-  );
-};
-
-const GrokModelPicker: FC = () => {
-  const { selectedModelId, setSelectedModelId } = useModelStore();
-  const aui = useAui();
-
-  const displayModels = FALLBACK_MODELS;
-
-  useEffect(() => {
-    const exists = displayModels.some((m) => m.id === selectedModelId);
-    if (!exists) {
-      setSelectedModelId(displayModels[0]!.id);
-    }
-  }, [displayModels, selectedModelId, setSelectedModelId]);
-
-  useEffect(() => {
-    return aui.modelContext.register({
-      getModelContext: () => ({
-        config: { modelName: selectedModelId },
-      }),
-    });
-  }, [aui, selectedModelId]);
-
-  const current =
-    displayModels.find((m) => m.id === selectedModelId) ??
-    displayModels[0]!;
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="mb-0.5 flex h-9 shrink-0 items-center gap-2 rounded-full px-2.5 text-[#0d0d0d] hover:bg-[#f0f0f0] dark:text-white dark:hover:bg-[#2a2a2a]">
-        <Zap width={18} height={18} className="shrink-0" />
-        <div className="flex items-center gap-1 overflow-hidden transition-[max-width,opacity] duration-300 group-data-[empty=false]/composer:max-w-0 group-data-[empty=false]/composer:opacity-0 group-data-[empty=true]/composer:max-w-32 group-data-[empty=true]/composer:opacity-100">
-          <span className="text-sm font-semibold whitespace-nowrap">
-            {current.name}
-          </span>
-          <ChevronDownIcon width={16} height={16} className="shrink-0" />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="min-w-64 max-h-80 overflow-y-auto"
-      >
-        {displayModels.map(({ id, name, description }) => (
-          <DropdownMenuItem
-            key={id}
-            onClick={() => setSelectedModelId(id)}
-            className="flex items-start gap-3"
-          >
-            <span className="mt-0.5 flex size-4 items-center justify-center text-[#0d0d0d] dark:text-white">
-              {id === selectedModelId ? (
-                <CheckIcon width={14} height={14} />
-              ) : (
-                <Zap width={14} height={14} />
-              )}
-            </span>
-            <span className="flex flex-1 flex-col">
-              <span className="text-foreground text-sm">{name}</span>
-              <span className="text-muted-foreground text-xs">
-                {description ?? id}
-              </span>
-            </span>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 };
 
