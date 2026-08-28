@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const inputClasses =
@@ -59,30 +60,32 @@ export const McpConfigDialog: FC = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="-mx-1 flex max-h-[60dvh] flex-col gap-4 overflow-y-auto px-1 py-1">
-          <section className="flex flex-col gap-2">
-            <h3 className="text-muted-foreground text-xs font-medium">
-              Connectors
-            </h3>
-            <McpManagerPrimitive.Connectors>
-              {() => <ServerCard />}
-            </McpManagerPrimitive.Connectors>
-          </section>
+        <ScrollArea className="-mx-1 max-h-[60dvh]">
+          <div className="flex flex-col gap-4 px-1 py-1">
+            <section className="flex flex-col gap-2">
+              <h3 className="text-muted-foreground text-xs font-medium">
+                Connectors
+              </h3>
+              <McpManagerPrimitive.Connectors>
+                {() => <ServerCard />}
+              </McpManagerPrimitive.Connectors>
+            </section>
 
-          <CustomServersSection />
+            <CustomServersSection />
 
-          {addFormOpen ? (
-            <AddServerForm onDone={() => setAddFormOpen(false)} />
-          ) : (
-            <McpManagerPrimitive.AddCustomTrigger
-              className={buttonVariants({ variant: "outline" })}
-              onClick={() => setAddFormOpen(true)}
-            >
-              <PlusIcon data-icon="inline-start" />
-              Add custom server
-            </McpManagerPrimitive.AddCustomTrigger>
-          )}
-        </div>
+            {addFormOpen ? (
+              <AddServerForm onDone={() => setAddFormOpen(false)} />
+            ) : (
+              <McpManagerPrimitive.AddCustomTrigger
+                className={buttonVariants({ variant: "outline" })}
+                onClick={() => setAddFormOpen(true)}
+              >
+                <PlusIcon data-icon="inline-start" />
+                Add custom server
+              </McpManagerPrimitive.AddCustomTrigger>
+            )}
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

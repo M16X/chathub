@@ -126,3 +126,14 @@ body {
 button, input, textarea, select {
   font: inherit;
 }
+
+/* Radix ScrollArea inserts a content wrapper below each viewport. Restore the
+   layouts the wrapped content expects, since the wrapper defaults to
+   `display: table`. */
+.thread-viewport > [data-radix-scroll-area-content] {
+  @apply flex flex-col items-center self-stretch bg-inherit;
+}
+
+.thread-list-viewport > [data-radix-scroll-area-content] {
+  @apply flex flex-col gap-0.5;
+}

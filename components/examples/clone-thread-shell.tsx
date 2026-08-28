@@ -23,8 +23,11 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useAuiState } from "@assistant-ui/react";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { MenuIcon, PanelLeftIcon } from "lucide-react";
 import { useState, type FC, type MouseEvent, type ReactNode } from "react";
+
+import { ScrollBar, ScrollArea } from "@/components/ui/scroll-area";
 
 type CloneThreadShellProps = {
   children: ReactNode;
@@ -130,50 +133,62 @@ export const CloneThreadShell: FC<CloneThreadShellProps> = ({
               )}
         </div>
 
-        <ThreadListRoot
-          className={cn(
-            "relative flex-1 transition-[padding,width] duration-200",
-            sidebarCollapsed
-              ? "w-12 overflow-hidden px-2 pt-1"
-              : "w-65 overflow-y-auto p-3",
-          )}
-        >
-          {wrapNewThreadTooltip ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger render={newThread} />
-                {sidebarCollapsed && (
-                  <TooltipContent side="right">New Thread</TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            newThread
-          )}
-          {showSearch && hasThreads && (
-            <div
-              aria-hidden={sidebarCollapsed}
-              inert={sidebarCollapsed}
-              className={cn(
-                "transition-opacity duration-150",
-                sidebarCollapsed && "pointer-events-none opacity-0",
-              )}
-            >
-              <ThreadListSearch value={search} onValueChange={setSearch} />
-            </div>
-          )}
-          <ThreadListItems
-            searchQuery={showSearch && hasThreads ? search : ""}
-            aria-hidden={sidebarCollapsed}
-            inert={sidebarCollapsed}
+        <ScrollAreaPrimitive.Root asChild>
+          <ThreadListRoot
             className={cn(
-              "transition-[opacity,transform] duration-150",
+              "relative flex-1 transition-[padding,width] duration-200",
               sidebarCollapsed
-                ? "pointer-events-none opacity-0"
-                : "translate-x-0 opacity-100",
+                ? "w-12 overflow-hidden px-2 pt-1"
+                : "w-65 p-3",
             )}
-          />
-        </ThreadListRoot>
+          >
+            <ScrollAreaPrimitive.Viewport
+              className="thread-list-viewport"
+              asChild
+            >
+              <div className="h-full w-full">
+                {wrapNewThreadTooltip ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger render={newThread} />
+                      {sidebarCollapsed && (
+                        <TooltipContent side="right">
+                          New Thread
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  newThread
+                )}
+                {showSearch && hasThreads && (
+                  <div
+                    aria-hidden={sidebarCollapsed}
+                    inert={sidebarCollapsed}
+                    className={cn(
+                      "transition-opacity duration-150",
+                      sidebarCollapsed && "pointer-events-none opacity-0",
+                    )}
+                  >
+                    <ThreadListSearch value={search} onValueChange={setSearch} />
+                  </div>
+                )}
+                <ThreadListItems
+                  searchQuery={showSearch && hasThreads ? search : ""}
+                  aria-hidden={sidebarCollapsed}
+                  inert={sidebarCollapsed}
+                  className={cn(
+                    "transition-[opacity,transform] duration-150",
+                    sidebarCollapsed
+                      ? "pointer-events-none opacity-0"
+                      : "translate-x-0 opacity-100",
+                  )}
+                />
+              </div>
+            </ScrollAreaPrimitive.Viewport>
+            {!sidebarCollapsed && <ScrollBar />}
+          </ThreadListRoot>
+        </ScrollAreaPrimitive.Root>
       </aside>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -197,12 +212,14 @@ export const CloneThreadShell: FC<CloneThreadShellProps> = ({
           <SheetTitle className="flex h-12 shrink-0 items-center px-4 text-sm font-medium">
             {sheetTitle ?? "Chats"}
           </SheetTitle>
-          <div
-            className="relative flex-1 overflow-y-auto p-3"
-            onClick={closeMobileSidebarAfterNavigation}
-          >
-            <ThreadList />
-          </div>
+          <ScrollArea className="relative flex-1">
+            <div
+              className="p-3"
+              onClick={closeMobileSidebarAfterNavigation}
+            >
+              <ThreadList />
+            </div>
+          </ScrollArea>
         </SheetContent>
       </Sheet>
 

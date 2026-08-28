@@ -1,10 +1,13 @@
 "use client";
 
 import type { FC } from "react";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { useShikiHighlighter, type ShikiHighlighterProps } from "react-shiki";
 import { useAuiState } from "@assistant-ui/react";
 import type { SyntaxHighlighterProps as AUIProps } from "@assistant-ui/react-markdown";
 import { cn } from "@/lib/utils";
+
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 /**
  * Props for the SyntaxHighlighter component
@@ -18,7 +21,13 @@ export type HighlighterProps = Omit<
   Partial<Pick<AUIProps, "node" | "components">>;
 
 const containerClassName =
-  "aui-shiki-base [&_pre]:border-border/50 [&_pre]:bg-muted/30! [&_.line]:px-0! [&_pre]:overflow-x-auto [&_pre]:rounded-t-none [&_pre]:rounded-b-xl [&_pre]:border [&_pre]:border-t-0 [&_pre]:p-3.5 [&_pre]:text-[13px] [&_pre]:leading-relaxed";
+  "aui-shiki-base border-border/50 bg-muted/30 rounded-t-none rounded-b-xl border border-t-0";
+
+// The scrollable inner div carries the pre styling; `w-max` lets long lines
+// extend past the viewport so the horizontal scrollbar has a range, while
+// `min-w-full` keeps short code stretched to the box.
+const contentClassName =
+  "[&_.line]:px-0! [&_pre]:m-0 [&_pre]:w-max [&_pre]:min-w-full [&_pre]:bg-muted/30! [&_pre]:p-3.5 [&_pre]:text-[13px] [&_pre]:leading-relaxed";
 
 const PlainCode: FC<{ code: string }> = ({ code }) => (
   <pre>
@@ -74,7 +83,7 @@ export const SyntaxHighlighter: FC<HighlighterProps> = ({
   const trimmed = code.trim();
 
   return (
-    <div
+    <ScrollAreaPrimitive.Root
       className={cn(
         containerClassName,
         isStreaming && "aui-shiki-streaming",
@@ -82,17 +91,22 @@ export const SyntaxHighlighter: FC<HighlighterProps> = ({
       )}
       style={style}
     >
-      {isStreaming ? (
-        <PlainCode code={trimmed} />
-      ) : (
-        <HighlightedCode
-          code={trimmed}
-          language={language}
-          theme={theme}
-          options={{ ...options, delay }}
-        />
-      )}
-    </div>
+      <ScrollAreaPrimitive.Viewport asChild>
+        <div className={contentClassName}>
+          {isStreaming ? (
+            <PlainCode code={trimmed} />
+          ) : (
+            <HighlightedCode
+              code={trimmed}
+              language={language}
+              theme={theme}
+              options={{ ...options, delay }}
+            />
+          )}
+        </div>
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollBar orientation="horizontal" />
+    </ScrollAreaPrimitive.Root>
   );
 };
 

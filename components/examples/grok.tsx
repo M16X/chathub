@@ -24,6 +24,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { type FC } from "react";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { useAttachmentSrc } from "./use-attachment-src";
 import { MarkdownText } from "@/components/assistant-ui/markdown-text";
 import { ContextDisplay } from "@/components/assistant-ui/context-display";
@@ -38,31 +39,37 @@ import { CloneThreadShell } from "./clone-thread-shell";
 import { GrokIcon } from "@/components/icons/grok";
 import { McpConfigDialog } from "@/components/mcp/mcp-config-dialog";
 import { DEFAULT_MODEL_CONTEXT_WINDOW } from "@/lib/model";
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 export const Grok: FC = () => {
   return (
     <CloneThreadShell>
-      <ThreadPrimitive.Root className="relative flex h-full flex-col items-stretch bg-[#fdfdfd] px-4 dark:bg-[#141414]">
-        <div className="absolute top-3 right-3 z-10">
-          <McpConfigDialog />
-        </div>
-
-        <AuiIf condition={(s) => s.thread.isEmpty}>
-          <div className="flex h-full flex-col items-center justify-center">
-            <Composer />
+      <ScrollAreaPrimitive.Root asChild>
+        <ThreadPrimitive.Root className="relative flex h-full flex-col items-stretch bg-[#fdfdfd] px-4 dark:bg-[#141414]">
+          <div className="absolute top-3 right-3 z-10">
+            <McpConfigDialog />
           </div>
-        </AuiIf>
 
-        <AuiIf condition={(s) => s.thread.isEmpty === false}>
-          <ThreadPrimitive.Viewport className="flex grow flex-col overflow-y-scroll pt-16">
-            <ThreadPrimitive.Messages>
-              {() => <ChatMessage />}
-            </ThreadPrimitive.Messages>
-          </ThreadPrimitive.Viewport>
-          <Composer />
-          <ThreadFooter />
-        </AuiIf>
-      </ThreadPrimitive.Root>
+          <AuiIf condition={(s) => s.thread.isEmpty}>
+            <div className="flex h-full flex-col items-center justify-center">
+              <Composer />
+            </div>
+          </AuiIf>
+
+          <AuiIf condition={(s) => s.thread.isEmpty === false}>
+            <ScrollAreaPrimitive.Viewport className="thread-viewport" asChild>
+              <ThreadPrimitive.Viewport className="flex grow flex-col pt-16">
+                <ThreadPrimitive.Messages>
+                  {() => <ChatMessage />}
+                </ThreadPrimitive.Messages>
+              </ThreadPrimitive.Viewport>
+            </ScrollAreaPrimitive.Viewport>
+            <ScrollBar />
+            <Composer />
+            <ThreadFooter />
+          </AuiIf>
+        </ThreadPrimitive.Root>
+      </ScrollAreaPrimitive.Root>
     </CloneThreadShell>
   );
 };

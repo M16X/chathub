@@ -15,7 +15,10 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
+
+import { ScrollBar } from "@/components/ui/scroll-area";
 
 export type MermaidDiagramProps = SyntaxHighlighterProps & {
   className?: string;
@@ -324,18 +327,23 @@ const MermaidDiagramImpl: FC<MermaidDiagramProps> = ({
 
   if (result.error) {
     return (
-      <div
+      <ScrollAreaPrimitive.Root
         data-slot="mermaid-fallback"
         className={cn(
           "aui-mermaid-fallback bg-muted/75 rounded-b-lg",
           className,
         )}
       >
-        <pre className="overflow-x-auto p-4 text-sm">{code.trim()}</pre>
-        <p className="text-muted-foreground border-border border-t px-4 py-1.5 text-xs">
-          diagram could not be rendered
-        </p>
-      </div>
+        <ScrollAreaPrimitive.Viewport asChild>
+          <div>
+            <pre className="w-max min-w-full p-4 text-sm">{code.trim()}</pre>
+            <p className="text-muted-foreground border-border border-t px-4 py-1.5 text-xs">
+              diagram could not be rendered
+            </p>
+          </div>
+        </ScrollAreaPrimitive.Viewport>
+        <ScrollBar orientation="horizontal" />
+      </ScrollAreaPrimitive.Root>
     );
   }
 

@@ -12,6 +12,7 @@ import {
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import {
   useScrollLock,
   useAuiState,
@@ -24,6 +25,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const ANIMATION_DURATION = 200;
@@ -303,11 +305,9 @@ function ReasoningText({
   }, [isPreview]);
 
   return (
-    <div
-      ref={scrollRef}
-      data-slot="reasoning-text"
+    <ScrollAreaPrimitive.Root
       className={cn(
-        "aui-reasoning-text relative z-0 max-h-64 overflow-y-auto ps-6 pt-2 pb-2 leading-relaxed text-pretty",
+        "relative z-0",
         "transform-gpu transition-[transform,opacity] ease-[cubic-bezier(0.32,0.72,0,1)]",
         "motion-reduce:animate-none",
         "group-data-open/collapsible-content:animate-in",
@@ -320,14 +320,27 @@ function ReasoningText({
         "group-data-closed/collapsible-content:blur-out-[2px]",
         "group-data-open/collapsible-content:animation-duration-(--animation-duration)",
         "group-data-closed/collapsible-content:animation-duration-(--animation-duration)",
-        className,
       )}
-      {...props}
     >
-      <div ref={contentRef} className="aui-reasoning-text-content space-y-4">
-        {children}
-      </div>
-    </div>
+      <ScrollAreaPrimitive.Viewport asChild>
+        {/* The scroller itself carries the height cap; a cap on Root alone
+            would clip content without giving the viewport scroll range. */}
+        <div
+          ref={scrollRef}
+          data-slot="reasoning-text"
+          className={cn(
+            "aui-reasoning-text max-h-64 ps-6 pt-2 pb-2 leading-relaxed text-pretty",
+            className,
+          )}
+          {...props}
+        >
+          <div ref={contentRef} className="aui-reasoning-text-content space-y-4">
+            {children}
+          </div>
+        </div>
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollBar />
+    </ScrollAreaPrimitive.Root>
   );
 }
 

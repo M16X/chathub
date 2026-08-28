@@ -15,10 +15,12 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { type FC, memo, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 
 import { SyntaxHighlighter } from "@/components/assistant-ui/shiki-highlighter";
 import { MermaidDiagram } from "@/components/assistant-ui/mermaid-diagram";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+import { ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const MarkdownTextImpl = () => {
@@ -246,14 +248,20 @@ const defaultComponents = memoizeMarkdownComponents({
       {...props}
     />
   ),
-  pre: ({ className, ...props }) => (
-    <pre
+  pre: ({ className, children, ...props }) => (
+    <ScrollAreaPrimitive.Root
       className={cn(
-        "aui-md-pre border-border/50 bg-muted/30 overflow-x-auto rounded-t-none rounded-b-xl border border-t-0 p-3.5 text-[13px] leading-relaxed",
+        "aui-md-pre border-border/50 bg-muted/30 rounded-t-none rounded-b-xl border border-t-0",
         className,
       )}
-      {...props}
-    />
+    >
+      <ScrollAreaPrimitive.Viewport asChild>
+        <pre className="p-3.5 text-[13px] leading-relaxed" {...props}>
+          {children}
+        </pre>
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollBar orientation="horizontal" />
+    </ScrollAreaPrimitive.Root>
   ),
   code: function Code({ className, ...props }) {
     const isCodeBlock = useIsMarkdownCodeBlock();
